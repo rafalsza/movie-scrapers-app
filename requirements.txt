@@ -4,3 +4,6 @@ IMDbPY==2022.7.9
 requests==2.27.1
 SQLAlchemy==1.4.39
 pandas
+lxml
+psycopg2-binary
+numpy
