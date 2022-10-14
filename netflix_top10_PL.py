@@ -9,7 +9,7 @@ import pandas as pd
 pd.options.display.max_columns = None
 
 class NetflixTop10PL:
-    # engine = create_engine('postgresql://postgres:postgres@18.197.53.140:5432/scrapers')
+    # engine = create_engine('postgresql://')
 
     def parse(self):
         NETFLIX_URL = 'https://top10.netflix.com/poland'

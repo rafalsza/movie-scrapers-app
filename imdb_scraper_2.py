@@ -5,7 +5,7 @@ from sqlalchemy.types import Integer, Text, Float
 
 
 class ImdbscraperPopular:
-    engine = create_engine('postgresql://postgres:postgres@18.197.53.140:5432/scrapers')
+    engine = create_engine('postgresql://')
 
     def __init__(self):
         self.df = None

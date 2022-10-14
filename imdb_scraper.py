@@ -7,7 +7,7 @@ from sqlalchemy.types import Integer, Text, Float
 class IMDBSCRAPER:
     results = []
 
-    engine = create_engine('postgresql://postgres:postgres@18.197.53.140:5432/scrapers')
+    engine = create_engine('postgresql://')
 
     def parse(self):
         ia = Cinemagoer()
