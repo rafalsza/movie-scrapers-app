@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block body_imdb_popular %}
+<h4>IMDB TOP 100 POPULAR MOVIES</h4>
+<img src="{{url_for('static', filename='imdb-logo.jpg')}}"
+     alt="IMDb" style="width:250;height:100px;"
+     onclick="window.open('https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm', '_blank');">
+<hr class="my-4"/>
+<a href="/results_imdb_popular" class="btn btn-success">Scrape</a>
+<div class="mt-4">No data yet...</div>
+{% endblock %}
+
+{% block body_imdb %}
+<h4>IMDB TOP 250 MOVIES</h4>
+<img src="{{url_for('static', filename='imdb-logo.jpg')}}"
+     alt="IMDb" style="width:250;height:128px;"
+     onclick="window.open('https://www.imdb.com/chart/top/?ref_=nv_mv_250', '_blank');">
+<hr class="my-4"/>
+<a href="/results_imdb" class="btn btn-success">Scrape</a>
+<div class="mt-4">No data yet...</div>
+{% endblock %}
+
+{% block body_filmweb %}
+<h4>FILMWEB.PL TOP 100 MOVIES</h4>
+<img src="{{url_for('static', filename='filmweb-logo.png')}}"
+     alt="Filmweb.pl" style="width:250px;height:100px;"
+     onclick="window.open('https://www.filmweb.pl/ranking/film', '_blank');">
+<hr class="my-4"/>
+<a href="/results_filmweb" class="btn btn-success">Scrape</a>
+<div class="mt-4">No data yet...</div>
+{% endblock %}
+
+{% block body_netflix_top10_pl %}
+<h4>NETFLIX TOP 10 MOVIES IN POLAND</h4>
+<img src="{{url_for('static', filename='netflix-logo.png')}}"
+     alt="Netflix" style="width:150;height:100px;"
+     onclick="window.open('https://top10.netflix.com/poland', '_blank');">
+<hr class="my-4"/>
+<a href="/results_netflix_top10_pl" class="btn btn-success">Scrape</a>
+<div class="mt-4">No data yet...</div>
+{% endblock %}
+
+
