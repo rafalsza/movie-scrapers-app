@@ -1,3 +1,4 @@
+import waitress
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -94,5 +95,5 @@ def download_netflix_top10_pl():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
-    # waitress.serve(app, host='127.0.0.1', port='5000')
+    #app.run(debug=True, threaded=True)
+    waitress.serve(app, host='127.0.0.1', port='5000')

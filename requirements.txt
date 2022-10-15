@@ -7,3 +7,4 @@ pandas
 lxml
 psycopg2-binary
 numpy
+waitress
