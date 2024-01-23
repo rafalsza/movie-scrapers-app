@@ -13,4 +13,4 @@ services:
 
 networks:
   npm-nw:
-    external: true
+    driver: bridge
