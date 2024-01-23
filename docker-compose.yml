@@ -1,0 +1,16 @@
+services:
+  movie-scrapers:
+    container_name: movie_scrapers
+    build:
+        context: .
+    ports:
+      - "80:5000"
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - npm-nw
+    restart: unless-stopped
+
+networks:
+  npm-nw:
+    external: true
