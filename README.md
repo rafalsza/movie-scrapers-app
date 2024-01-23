@@ -31,4 +31,8 @@ The Scraper Movie Rankings App is a Python-based web scraper application designe
 
    ```bash
    git clone https://github.com/rafalsza/movie-scrapers-app.git
+2. Run docker container
+
+    ```bash
+   docker compose up -d
 
