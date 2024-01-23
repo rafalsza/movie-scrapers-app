@@ -1,12 +1,15 @@
-FROM python:3.9.12-slim-buster
+FROM python:3.10.13-slim-bullseye
+
 EXPOSE 5000
-ENV FLASK_APP=app.py
+
+ENV FLASK_APP=app.py\
+    FLASK_DEBUG=True
+
 WORKDIR /scrapers
+
 COPY . /scrapers
-RUN python -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-#ENTRYPOINT to  stałe wejsciowe polecenie dla kontenera
-ENTRYPOINT ["flask", "run"]
-#CMD to metadane kontenera, nie zmienia samej zawartosci obrazu, 
-#tylko mowi dockerowi, ze w momencie uruchamiania kontenera ma wykonac to polecenie
-CMD ["-h", "0.0.0.0", "-p", "5000"]
+RUN python -m pip install --upgrade pip\
+    && pip install --no-cache-dir -r requirements.txt
+
+ENTRYPOINT ["python3"]
+CMD ["app.py"]
