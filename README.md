@@ -15,8 +15,6 @@ The Scraper Movie Rankings App is a Python-based web scraper application designe
   - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Getting Started
 
