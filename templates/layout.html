@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Movie Scraper App</title>
+      <meta charset="UTF-8">
+      <!-- Primary Meta Tags -->
+      <meta name="title" content="Movie Scraper App" />
+      <meta name="description" content="Movie rankings for IMDB.com, Filmweb.pl, Netflix.pl" />
+      <!-- Open Graph / Facebook -->
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://movie-scraper.tk/" />
+      <meta property="og:title" content="Movie Scraper App" />
+      <meta property="og:description" content="Movie rankings for IMDB.com, Filmweb.pl, Netflix.pl" />
+      <meta property="og:image" content="https://movie-scraper.tk/static/m_scraper.webp" />
+      <!-- Twitter -->
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content="https://movie-scraper.tk/" />
+      <meta property="twitter:title" content="Movie Scraper App" />
+      <meta property="twitter:description" content="Movie rankings for IMDB.com, Filmweb.pl, Netflix.pl" />
+      <meta property="twitter:image" content="https://movie-scraper.tk/static/m_scraper.webp" />
+      <!-- Meta Tags Generated with https://metatags.io -->
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+      <meta name="HandheldFriendly" content="True">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <style>
+         body {
+         background-color: black;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container-md mb-2 text-dark text-center bg-black">
+         <div class="d-flex justify-content-end my-2">
+            <!-- Polish flag -->
+            <a href="/change_language?language=PL" class="mx-2 text-decoration-none" id="PL_flag">
+            🇵🇱
+            </a>
+            <!-- English flag -->
+            <a href="/change_language?language=EN" class="mx-2 text-decoration-none" id="EN_flag">
+            🇬🇧
+            </a>
+         </div>
+         <div class="row justify-content-center">
+            <div class="col-3 my-3">
+               <img src="{{url_for('static', filename='m_logo.webp')}}"
+                  class="img-fluid"
+                  alt="Movie scraper App logo">
+            </div>
+            <div class="col-6 d-flex mx-auto my-3">
+               <img src="{{url_for('static', filename='movie_scraper_text.webp')}}"
+                  class="img-fluid m-auto"
+                  alt="Movie scrapers">
+            </div>
+            <div class="col-3 my-3">
+               <img src="{{url_for('static', filename='m_logo.webp')}}"
+                  class="img-fluid"
+                  alt="Movie scraper App logo">
+            </div>
+         </div>
+         <div class="row justify-content-center">
+            <div class="col-12 col-md-3 px-3 py-2">
+               <div class="card">
+                  <div class="card-body bg-secondary">
+                     {% block body_imdb_popular_movies %}
+                     {% endblock %}
+                  </div>
+               </div>
+            </div>
+            <div class="col-12 col-md-3 px-3 py-2">
+               <div class="card">
+                  <div class="card-body bg-secondary">
+                     {% block body_imdb_top250 %}
+                     {% endblock %}
+                  </div>
+               </div>
+            </div>
+            <div class="col-12 col-md-3 px-3 py-2">
+               <div class="card">
+                  <div class="card-body bg-secondary">
+                     {% block body_filmweb_top100 %}
+                     {% endblock %}
+                  </div>
+               </div>
+            </div>
+            <div class="col-12 col-md-3 px-3 py-2">
+               <div class="card">
+                  <div class="card-body bg-secondary">
+                     {% block body_netflix_pl_top10 %}
+                     {% endblock %}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div align="center">
+         <div class="badge bg-primary text-wrap mx-auto" style="width: 9rem;">
+            Copyright by rafal.sza@yahoo.com
+         </div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous" async></script>
+   </body>
+</html>

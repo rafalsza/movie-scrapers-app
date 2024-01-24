@@ -1,0 +1,50 @@
+{% extends "layout_results.html" %}
+{% block body_results %}
+  <div class="row justify-content-center">
+        <div class="col-12 col-lg-11 pe-lg-0 ps-lg-5">
+          <img src="{{url_for('static', filename='imdb-logo.webp')}}"
+              class="rounded mx-auto mt-1 pb-3 d-block img-fluid"
+              alt="IMDB TOP 250 MOVIES"
+              style="width:auto;height:90px;">
+          <h4 class="card-title text-center">IMDB TOP 250 MOVIES</h4>
+        </div>
+    <div class="col-12 col-lg-1 align-self-start text-center text-lg-end">
+    <a href="/" class="btn btn-primary text-wrap">Back</a>
+    </div>
+  </div>
+  <hr class="my-4"/>
+  <table id="scraped-table" class="display compact cell-border responsive text-dark fw-bold" style="width: 100%">
+    <thead>
+      <tr>
+        <th>rank</th>
+        <th>movie</th>
+        <th>year</th>
+        <th>rating</th>
+        <th>num_reviews</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in row_data %}
+        <tr>
+          <td>{{row[0]}}</td>
+          <td>{{ row[1] | safe }}</td>
+          <td>{{row[2]}}</td>
+          <td>{{row[3]}}</td>
+          <td>{{row[4]}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr class="my-4"/>
+  <div class="gap-2 col-12 mx-auto text-center">
+    <a href="/download_imdb_top250" class="btn btn-primary">Download</a>
+  </div>
+  
+  <script>
+    $(document).ready(function () {
+    $('#scraped-table').DataTable();
+});
+  </script>
+{% endblock %}
+
+

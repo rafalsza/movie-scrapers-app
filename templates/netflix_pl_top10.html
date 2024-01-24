@@ -1,0 +1,50 @@
+{% extends "layout_results.html" %}
+
+{% block body_results %}
+  <div class="row justify-content-center">
+        <div class="col-12 col-lg-11 pe-lg-0 ps-lg-5">
+          <img src="{{url_for('static', filename='netflix-logo.webp')}}"
+              class="rounded mx-auto mt-1 pb-3 d-block img-fluid"
+              alt="NETFLIX"
+              style="width:auto;height:90px;">
+          <h4 class="card-title text-center fs-3">NETFLIX TOP 10 MOVIES IN POLAND</h4>
+          <h4 class="card-title text-center fs-4">{{ dates }}</h4>
+        </div>
+    <div class="col-12 col-lg-1 align-self-start text-center text-lg-end">
+    <a class="btn btn-primary text-wrap" href="/">Back</a>
+    </div>
+  </div>
+  <hr class="my-4"/>
+  <table id="scraped-table" class="display compact cell-border responsive text-black fw-bold" style="width: 100%">
+    <thead>
+      <tr>
+        <th>rank</th>
+        <th>movie</th>
+        <th>year</th>
+        <th>genre</th>
+        <th>weeks in top10</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in row_data %}
+        <tr>
+          <td>{{row[0]}}</td>
+          <td>{{ row[1] | safe }}</td>
+          <td>{{row[2]}}</td>
+          <td>{{row[3]}}</td>
+          <td>{{row[4]}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr class="my-4"/>
+  <div class="gap-2 col-12 mx-auto text-center">
+    <a href="/download_netflix_pl_top10" class="btn btn-primary">Download</a>
+  </div>
+  
+  <script>
+    $(document).ready( function() {
+      $('#scraped-table').DataTable();
+    });
+  </script>
+{% endblock %}

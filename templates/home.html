@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block body_imdb_popular_movies %}
+<h4 class="card-header card-title" style="height:70px">IMDB TOP 100 POPULAR MOVIES</h4>
+<img src="{{url_for('static', filename='imdb-logo.webp')}}"
+     class="rounded mx-auto my-2 d-block img-fluid"
+     alt="IMDB TOP 100 POPULAR MOVIES"
+     style="width:auto;height:90px;"
+     onclick="window.open('https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm', '_blank');">
+<a href="/imdb_popular_movies" class="btn btn-success">Scrape</a>
+{% endblock %}
+
+{% block body_imdb_top250 %}
+<h4 class="card-header card-title" style="height:70px">IMDB TOP 250 MOVIES</h4>
+<img src="{{url_for('static', filename='imdb-logo.webp')}}"
+     class="rounded mx-auto my-2 d-block img-fluid"
+     alt="IMDB TOP 250 MOVIES"
+     style="width:auto;height:90px;"
+     onclick="window.open('https://www.imdb.com/chart/top/?ref_=nv_mv_250', '_blank');">
+<a href="/imdb_top250" class="btn btn-success">Scrape</a>
+{% endblock %}
+
+{% block body_filmweb_top100 %}
+<h4 class="card-header card-title" style="height:70px">FILMWEB.PL TOP 100 MOVIES</h4>
+<img src="{{url_for('static', filename='filmweb-logo.webp')}}"
+     class="rounded mx-auto my-2 d-block img-fluid"
+     alt="Filmweb.pl"
+     style="width:auto;height:90px;"
+     onclick="window.open('https://www.filmweb.pl/ranking/film', '_blank');">
+<a href="/filmweb_top100" class="btn btn-success">Scrape</a>
+{% endblock %}
+
+{% block body_netflix_pl_top10 %}
+<h4 class="card-header card-title" style="height:70px">NETFLIX TOP 10 MOVIES IN POLAND</h4>
+<img src="{{url_for('static', filename='netflix-logo.webp')}}"
+     class="rounded mx-auto my-2 d-block img-fluid"
+     alt="Netflix"
+     style="width:auto;height:90px;"
+     onclick="window.open('https://top10.netflix.com/poland', '_blank');">
+<a href="/netflix_pl_top10" class="btn btn-success">Scrape</a>
+{% endblock %}
+
+
