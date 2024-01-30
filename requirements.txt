@@ -4,6 +4,6 @@ Flask==3.0.1
 requests==2.31.0
 pandas==2.1.4
 lxml==5.1.0
-numpy==1.26.2
+numpy==1.26.3
 waitress==2.1.2
 # requests-cache==1.1.0
