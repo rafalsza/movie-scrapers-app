@@ -9,11 +9,10 @@ from imdb_scraper_old import ImdbScraperTop250Old
 from imdb_top100_popular_scraper import ImdbPopularMovies
 from netflix_top10_PL_scraper import NetflixTop10PL
 from waitress import serve
-from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
-load_dotenv()
+
 handler = ipinfo.getHandler(access_token=os.getenv("IPINFO_API_KEY"))
 
 

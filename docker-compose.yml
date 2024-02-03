@@ -5,9 +5,8 @@ services:
         context: .
     ports:
       - "80:5000"
-    env_file:
-      - .env
     environment:
+      - IPINFO_API_KEY=your_actual_api_key_here
       - FLASK_APP=app.py
     networks:
       - npm-nw

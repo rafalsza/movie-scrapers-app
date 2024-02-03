@@ -28,7 +28,7 @@ The Scraper Movie Rankings App is a Python-based web scraper application designe
    ```bash
    git clone https://github.com/rafalsza/movie-scrapers-app.git
 
-2. Create .env file (register to https://ipinfo.io)
+2. Edit docker-compose.yml file IPINFO_API_KEY (register to https://ipinfo.io)
 
     ```bash
    IPINFO_API_KEY=your_api_key
