@@ -3,16 +3,17 @@ import pandas as pd
 import ipinfo
 import shutil
 import requests
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 from filmweb_scraper import FilmWebScraper
 from imdb_scraper_old import ImdbScraperTop250Old
 from imdb_top100_popular_scraper import ImdbPopularMovies
 from netflix_top10_PL_scraper import NetflixTop10PL
 from waitress import serve
+import logging
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
-
+logging.basicConfig(level=logging.INFO)
 handler = ipinfo.getHandler(access_token=os.getenv("IPINFO_API_KEY"))
 
 
@@ -30,10 +31,22 @@ def remove_http_cache(directory_path):
 def get_country_headers():
     # Use ipinfo.io library to get information about the user's IP address
     try:
-        details = handler.getDetails()
+        x_forwarded_for = request.headers.get("X-Forwarded-For")
+        logging.info(f"X-Forwarded-For information: {x_forwarded_for}")
+        # Check if the header is present and has a valid format
+        if x_forwarded_for:
+            ips = [ip.strip() for ip in x_forwarded_for.split(",")]
+            user_ip = next(
+                (ip for ip in ips if ":" not in ip), None
+            )  # Select the first IPv4 address if present
+            if not user_ip:
+                user_ip = ips[0]  # If no IPv4 address, use the first address
+        else:
+            user_ip = request.remote_addr
+        details = handler.getDetails(user_ip)
         user_country = details.country
     except Exception as e:
-        print(f"Error retrieving IP information: {e}")
+        logging.error(f"Error retrieving IP information: {e}")
         user_country = "US"  # Default to 'US' in case of an error
 
     # Set headers based on the user's country with dynamic Accept-Language
