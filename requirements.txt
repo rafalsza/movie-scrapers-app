@@ -6,4 +6,6 @@ pandas==2.1.4
 lxml==5.1.0
 numpy==1.26.3
 waitress==2.1.2
+ipinfo==5.0.1
+python-dotenv==1.0.1
 # requests-cache==1.1.0

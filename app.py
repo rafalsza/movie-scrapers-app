@@ -1,32 +1,20 @@
 import os
+import pandas as pd
+import ipinfo
 import shutil
-
-from flask import Flask
-from flask import render_template, request, session, redirect
-from flask import send_from_directory
+import requests
+from flask import Flask, render_template, send_from_directory
 from filmweb_scraper import FilmWebScraper
 from imdb_scraper_old import ImdbScraperTop250Old
 from imdb_top100_popular_scraper import ImdbPopularMovies
 from netflix_top10_PL_scraper import NetflixTop10PL
 from waitress import serve
-import pandas as pd
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
-
-headers_PL = {
-    "Accept-Language": "pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
-    "like Gecko)"
-    "Chrome/91.0.4472.124 Safari/537.36",
-}
-
-headers_EN = {
-    "Accept-Language": "en-US;q=0.8,en;q=0.7",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
-    "like Gecko)"
-    "Chrome/91.0.4472.124 Safari/537.36",
-}
+load_dotenv()
+handler = ipinfo.getHandler(access_token=os.getenv("IPINFO_API_KEY"))
 
 
 def remove_http_cache(directory_path):
@@ -40,26 +28,45 @@ def remove_http_cache(directory_path):
         pass
 
 
-# Function to get the selected language and headers
-def get_language_and_headers():
-    selected_language = session.get("language", "PL")
-    headers = headers_PL if selected_language == "PL" else headers_EN
-    return selected_language, headers
+def get_country_headers():
+    # Use ipinfo.io library to get information about the user's IP address
+    try:
+        details = handler.getDetails()
+        user_country = details.country
+    except Exception as e:
+        print(f"Error retrieving IP information: {e}")
+        user_country = "US"  # Default to 'US' in case of an error
+
+    # Set headers based on the user's country with dynamic Accept-Language
+    headers = {
+        "Accept-Language": f"{user_country.lower()}-{user_country};q=0.9,en-US;q=0.8,en;q=0.7",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    }
+
+    return headers
 
 
-# Create a route to handle language selection
-@app.route("/change_language", methods=["GET", "POST"])
-def change_language():
-    if request.method == "POST":
-        language = request.form.get("language")
-        session["language"] = language
-        # remove_http_cache("http_cache/")
-    else:
-        language = request.args.get("language")
-        if language:
-            session["language"] = language
-            # remove_http_cache("http_cache/")
-    return redirect(request.referrer)  # Redirect back to the previous page
+def get_country_headers_no_library():
+    # Use ipinfo.io to get information about the user's IP address
+    try:
+        response = requests.get("https://ipinfo.io")
+        ip_info = response.json()
+        user_country = ip_info.get(
+            "country", "US"
+        )  # Default to 'US' if country information is not available
+    except Exception as e:
+        print(f"Error retrieving IP information: {e}")
+        user_country = "US"  # Default to 'US' in case of an error
+
+    # Set headers based on the user's country with dynamic Accept-Language
+    headers = {
+        "Accept-Language": f"{user_country.lower()}-{user_country};q=0.9,en-US;q=0.8,en;q=0.7",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
+        "like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    }
+
+    return headers
 
 
 # Define the root route
@@ -71,10 +78,10 @@ def root():
 # Define the results_i route for IMDB top 250 movies
 @app.route("/imdb_top250", methods=["GET", "POST"])
 def imdb_top250():
-    selected_language, headers = get_language_and_headers()
     # Create an instance of the IMDBSCRAPER class
     scraper = ImdbScraperTop250Old()
     # Parse the data from IMDB
+    headers = get_country_headers()
     scraper.parse(headers)
     # Create a DataFrame from the scraper's results
     df = pd.DataFrame(scraper.results)
@@ -103,8 +110,8 @@ def download_imdb_top250():
 # Define the results_imdb_popular route for IMDB top 100 popular movies
 @app.route("/imdb_popular_movies", methods=["GET", "POST"])
 def imdb_popular_movies():
-    selected_language, headers = get_language_and_headers()
     scraper = ImdbPopularMovies()
+    headers = get_country_headers()
     scraper.parse(headers)  # Call the parse method to populate the df attribute
     df = scraper.df
     # Remove duplicate rows based on the 'rank' column
@@ -137,8 +144,8 @@ def download_imdb_popular_top100():
 # Define the results_f route for Filmweb top 100 movies
 @app.route("/filmweb_top100", methods=["GET", "POST"])
 def filmweb_top100():
-    selected_language, headers = get_language_and_headers()
     scraper = FilmWebScraper()
+    headers = get_country_headers()
     scraper.parse(headers)
     df = pd.DataFrame(scraper.results)
     df = df.drop_duplicates(subset=["rank"])
@@ -162,8 +169,8 @@ def download_filmweb_top100():
 # Define the results_netflix_top10_pl route for Netflix top 10 movies in Poland
 @app.route("/netflix_pl_top10", methods=["GET", "POST"])
 def results_netflix_top10_pl():
-    selected_language, headers = get_language_and_headers()
     scraper = NetflixTop10PL()
+    headers = get_country_headers()
     scraper.parse(headers)
     # Get the dates of the top 10 rankings from the scraper
     dates = scraper.dates

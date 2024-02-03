@@ -5,6 +5,8 @@ services:
         context: .
     ports:
       - "80:5000"
+    env_file:
+      - .env
     environment:
       - FLASK_APP=app.py
     networks:
