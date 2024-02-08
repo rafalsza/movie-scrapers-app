@@ -53,22 +53,18 @@ def root():
     return render_template("home.html")
 
 
-# Define the results_i route for IMDB top 250 movies
 @app.route("/imdb_top250", methods=["GET", "POST"])
 def imdb_top250():
-    # Create an instance of the IMDBSCRAPER class
-    scraper = ImdbScraperTop250Old()
-    # Parse the data from IMDB
+    url = "https://www.imdb.com/chart/top/"
     headers = get_country_headers()
-    scraper.parse(headers)
-    # Create a DataFrame from the scraper's results
-    df = pd.DataFrame(scraper.results)
+    df = ImdbScraperTop250Old.scrape_imdb_top250(url, headers)
     # Remove duplicate rows based on the 'rank' column
     df = df.drop_duplicates(subset=["rank"])
     # Create an HTML table from the DataFrame
     table = df.to_html()
     # Save the DataFrame to a CSV file
-    df.to_csv("imdb_top250.csv", index=False)
+    filename = "imdb_top250.csv"
+    ImdbScraperTop250Old.download_csv(df, filename)
     # Render the imdb_top250.html template, passing the DataFrame as an HTML table and its columns and rows as lists
     return render_template(
         "imdb_top250.html",
@@ -88,10 +84,9 @@ def download_imdb_top250():
 # Define the results_imdb_popular route for IMDB top 100 popular movies
 @app.route("/imdb_popular_movies", methods=["GET", "POST"])
 def imdb_popular_movies():
-    scraper = ImdbPopularMovies()
+    url = "https://www.imdb.com/chart/moviemeter/"
     headers = get_country_headers()
-    scraper.parse(headers)  # Call the parse method to populate the df attribute
-    df = scraper.df
+    df = ImdbPopularMovies.scrape_imdb_popular_movies(url, headers)
     # Remove duplicate rows based on the 'rank' column
     df = df.drop_duplicates(subset=["rank"])
     # Replace null values in the 'year' column with 0
@@ -101,7 +96,8 @@ def imdb_popular_movies():
     # Create an HTML table from the DataFrame
     table = df.to_html()
     # Save the DataFrame to a CSV file
-    df.to_csv("imdb_top100_popular.csv", index=False)
+    filename = "imdb_top100_popular.csv"
+    ImdbPopularMovies.download_csv(df, filename)
     # Render the imdb_popular_movies.html template, passing the DataFrame as an HTML table and its columns and rows
     # as lists
     return render_template(
@@ -112,7 +108,6 @@ def imdb_popular_movies():
     )
 
 
-# Define the download_i_p route for downloading the IMDB top 100 popular movies CSV file
 @app.route("/download_imdb_top100_popular")
 def download_imdb_popular_top100():
     # Send the imdb_top100_popular.csv file as an attachment
@@ -121,12 +116,13 @@ def download_imdb_popular_top100():
 
 @app.route("/filmweb_top100", methods=["GET", "POST"])
 def filmweb_top100():
-    scraper = FilmWebScraper()
+    url = "https://www.filmweb.pl"
     headers = get_country_headers()
-    scraper.parse(headers)
-    df = pd.DataFrame(scraper.results)
+    df = FilmWebScraper.scrape_filmweb_top100(url, headers)
     df = df.drop_duplicates(subset=["rank"])
-    df.to_csv("filmweb_top100.csv", index=False)
+    filename = "filmweb_top100.csv"
+    FilmWebScraper.download_csv(df, filename)
+
     return render_template(
         "filmweb_top100.html",
         tables=[df.to_html(classes="data")],
