@@ -1,6 +1,6 @@
 # Scraper Movie Rankings App
 
-The Scraper Movie Rankings App is a Python-based web scraper application designed to retrieve and display movie rankings from popular movie websites.
+The Scraper Movie Rankings App is a Python-based web scraper application designed to retrieve and display movie rankings from popular movie websites like IMDB,Netflix,Filmweb.pl
 
 ## Features
 
@@ -28,11 +28,7 @@ The Scraper Movie Rankings App is a Python-based web scraper application designe
    ```bash
    git clone https://github.com/rafalsza/movie-scrapers-app.git
 
-2. Edit docker-compose.yml file IPINFO_API_KEY (register to https://ipinfo.io)
-
-    ```bash
-   IPINFO_API_KEY=your_api_key
-3. Run docker container
+2. Run docker container
 
     ```bash
    docker compose up -d

@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import ipinfo
 import shutil
-import requests
 from flask import Flask, render_template, send_from_directory, request
 from filmweb_scraper import FilmWebScraper
 from imdb_scraper_old import ImdbScraperTop250Old
@@ -29,49 +28,16 @@ def remove_http_cache(directory_path):
 
 
 def get_country_headers():
-    # Use ipinfo.io library to get information about the user's IP address
     try:
-        x_forwarded_for = request.headers.get("X-Forwarded-For")
-        logging.info(f"X-Forwarded-For information: {x_forwarded_for}")
-        # Check if the header is present and has a valid format
-        if x_forwarded_for:
-            ips = [ip.strip() for ip in x_forwarded_for.split(",")]
-            user_ip = next(
-                (ip for ip in ips if ":" not in ip), None
-            )  # Select the first IPv4 address if present
-            if not user_ip:
-                user_ip = ips[0]  # If no IPv4 address, use the first address
-        else:
-            user_ip = request.remote_addr
-        details = handler.getDetails(user_ip)
-        user_country = details.country
+        user_country = request.headers.get("Cf-Ipcountry")
+        logging.info(f"Country code: {user_country}")
+        if not user_country:
+            logging.warning("Cf-Ipcountry header not found.")
+            user_country = "US"  # Default to 'US' if header is not present
     except Exception as e:
-        logging.error(f"Error retrieving IP information: {e}")
+        logging.error(f"Error retrieving country information: {e}")
         user_country = "US"  # Default to 'US' in case of an error
 
-    # Set headers based on the user's country with dynamic Accept-Language
-    headers = {
-        "Accept-Language": f"{user_country.lower()}-{user_country};q=0.9,en-US;q=0.8,en;q=0.7",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
-        "like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-    }
-
-    return headers
-
-
-def get_country_headers_no_library():
-    # Use ipinfo.io to get information about the user's IP address
-    try:
-        response = requests.get("https://ipinfo.io")
-        ip_info = response.json()
-        user_country = ip_info.get(
-            "country", "US"
-        )  # Default to 'US' if country information is not available
-    except Exception as e:
-        print(f"Error retrieving IP information: {e}")
-        user_country = "US"  # Default to 'US' in case of an error
-
-    # Set headers based on the user's country with dynamic Accept-Language
     headers = {
         "Accept-Language": f"{user_country.lower()}-{user_country};q=0.9,en-US;q=0.8,en;q=0.7",
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
@@ -153,7 +119,6 @@ def download_imdb_popular_top100():
     return send_from_directory("", "imdb_top100_popular.csv", as_attachment=True)
 
 
-# Define the results_f route for Filmweb top 100 movies
 @app.route("/filmweb_top100", methods=["GET", "POST"])
 def filmweb_top100():
     scraper = FilmWebScraper()
@@ -162,7 +127,6 @@ def filmweb_top100():
     df = pd.DataFrame(scraper.results)
     df = df.drop_duplicates(subset=["rank"])
     df.to_csv("filmweb_top100.csv", index=False)
-    # Render the filmweb_top100.html template, passing the DataFrame as an HTML table and its columns and rows as lists
     return render_template(
         "filmweb_top100.html",
         tables=[df.to_html(classes="data")],
@@ -171,14 +135,11 @@ def filmweb_top100():
     )
 
 
-# Define the download_f route for downloading the Filmweb top 100 movies CSV file
 @app.route("/download_filmweb_top100")
 def download_filmweb_top100():
-    # Send the filmweb_top100.csv file as an attachment
     return send_from_directory("", "filmweb_top100.csv", as_attachment=True)
 
 
-# Define the results_netflix_top10_pl route for Netflix top 10 movies in Poland
 @app.route("/netflix_pl_top10", methods=["GET", "POST"])
 def results_netflix_top10_pl():
     scraper = NetflixTop10PL()
@@ -193,8 +154,6 @@ def results_netflix_top10_pl():
     # scraper.to_db()
     # Save the DataFrame to a CSV file
     df.to_csv("netflix_top10_PL.csv", index=False)
-    # Render the netflix_pl_top10.html template, passing the dates and DataFrame as lists and the DataFrame
-    # as an HTML table
     return render_template(
         "netflix_pl_top10.html",
         tables=[df.to_html(classes="data")],
@@ -204,7 +163,6 @@ def results_netflix_top10_pl():
     )
 
 
-# Define the download_n_t10_pl route for downloading the Netflix top 10 movies in Poland CSV file
 @app.route("/download_netflix_pl_top10")
 def download_netflix_pl_top10():
     return send_from_directory("", "netflix_top10_PL.csv", as_attachment=True)

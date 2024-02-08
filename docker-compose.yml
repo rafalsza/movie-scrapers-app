@@ -1,12 +1,11 @@
 services:
   movie-scrapers:
-    container_name: movie_scrapers
+    container_name: movie-scrapers
     build:
         context: .
     ports:
       - "80:5000"
     environment:
-      - IPINFO_API_KEY=your_actual_api_key_here
       - FLASK_APP=app.py
     networks:
       - npm-nw
