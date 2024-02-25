@@ -2,9 +2,9 @@ beautifulsoup4==4.12.3
 Flask==3.0.2
 # cinemagoer==2023.5.1
 requests==2.31.0
-pandas==2.1.4
+pandas==2.2.1
 lxml==5.1.0
-numpy==1.26.3
+numpy==1.26.4
 waitress==3.0.0
 ipinfo==5.0.1
 # requests-cache==1.1.0
