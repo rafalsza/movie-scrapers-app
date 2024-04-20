@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import ipinfo
 import shutil
 from flask import Flask, render_template, send_from_directory, request
 from filmweb_scraper import FilmWebScraper
@@ -13,7 +12,6 @@ import logging
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 logging.basicConfig(level=logging.INFO)
-handler = ipinfo.getHandler(access_token=os.getenv("IPINFO_API_KEY"))
 
 
 def remove_http_cache(directory_path):
