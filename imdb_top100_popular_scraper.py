@@ -43,7 +43,7 @@ class ImdbPopularMovies:
                         "year": year,
                         "genres": genres,
                         "rating": rating,
-                        "num_reviews": num_reviews,
+                        "reviews": num_reviews,
                     }
                 )
         except Exception as e:

@@ -44,7 +44,7 @@ class ImdbTop250Scraper:
                         "year": year,
                         "genres": genres,
                         "rating": rating,
-                        "num_reviews": num_reviews,
+                        "reviews": num_reviews,
                     }
                 )
         except Exception as e:
@@ -61,6 +61,6 @@ class ImdbTop250Scraper:
 
     @staticmethod
     def scrape_imdb_top250(url, headers):
-        results = ImdbScraperTop250Old.parse_imdb_page(url, headers)
+        results = ImdbTop250Scraper.parse_imdb_page(url, headers)
         df = pd.DataFrame(results)
         return df
