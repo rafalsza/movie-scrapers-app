@@ -3,7 +3,7 @@ import pandas as pd
 import shutil
 from flask import Flask, render_template, send_from_directory, request
 from filmweb_scraper import FilmWebScraper
-from imdb_scraper_old import ImdbScraperTop250Old
+from imdb_top250_scraper import ImdbTop250Scraper
 from imdb_top100_popular_scraper import ImdbPopularMovies
 from netflix_top10_PL_scraper import NetflixTop10PL
 from waitress import serve
@@ -22,7 +22,6 @@ def remove_http_cache(directory_path):
     except Exception as e:
         # Handle any errors that may occur during folder removal
         print(f"Error removing http_cache folder in {directory_path}: {e}")
-        pass
 
 
 def get_country_headers():
@@ -55,20 +54,18 @@ def root():
 def imdb_top250():
     url = "https://www.imdb.com/chart/top/"
     headers = get_country_headers()
-    df = ImdbScraperTop250Old.scrape_imdb_top250(url, headers)
+    df = ImdbTop250Scraper.scrape_imdb_top250(url, headers)
     # Remove duplicate rows based on the 'rank' column
     df = df.drop_duplicates(subset=["rank"])
-    # Create an HTML table from the DataFrame
-    table = df.to_html()
     # Save the DataFrame to a CSV file
     filename = "imdb_top250.csv"
-    ImdbScraperTop250Old.download_csv(df, filename)
+    ImdbTop250Scraper.download_csv(df, filename)
     # Render the imdb_top250.html template, passing the DataFrame as an HTML table and its columns and rows as lists
     return render_template(
         "imdb_top250.html",
         tables=[df.to_html(classes="data")],
         titles=df.columns.values,
-        row_data=list(df.values.tolist()),
+        row_data=list(df.to_numpy().tolist()),
     )
 
 
@@ -88,11 +85,7 @@ def imdb_popular_movies():
     # Remove duplicate rows based on the 'rank' column
     df = df.drop_duplicates(subset=["rank"])
     # Replace null values in the 'year' column with 0
-    df.year.fillna(value=0, inplace=True)
-    # Convert the 'year' column to integer data type
-    df.year = df.year.astype(int)
-    # Create an HTML table from the DataFrame
-    table = df.to_html()
+    df["year"] = df["year"].fillna(0).astype(int)
     # Save the DataFrame to a CSV file
     filename = "imdb_top100_popular.csv"
     ImdbPopularMovies.download_csv(df, filename)
@@ -102,7 +95,7 @@ def imdb_popular_movies():
         "imdb_popular_movies.html",
         tables=[df.to_html(classes="data")],
         titles=df.columns.values,
-        row_data=list(df.values.tolist()),
+        row_data=list(df.to_numpy().tolist()),
     )
 
 
@@ -125,7 +118,7 @@ def filmweb_top100():
         "filmweb_top100.html",
         tables=[df.to_html(classes="data")],
         titles=df.columns.values,
-        row_data=list(df.values.tolist()),
+        row_data=list(df.to_numpy().tolist()),
     )
 
 
@@ -152,7 +145,7 @@ def results_netflix_top10_pl():
         "netflix_pl_top10.html",
         tables=[df.to_html(classes="data")],
         titles=df.columns.values,
-        row_data=list(df.values.tolist()),
+        row_data=list(df.to_numpy().tolist()),
         dates=dates,
     )
 

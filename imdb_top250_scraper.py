@@ -1,12 +1,13 @@
 import json
-import re
-import pandas as pd
+
 from bs4 import BeautifulSoup
 import requests
+import re
+import pandas as pd
 import logging
 
 
-class ImdbPopularMovies:
+class ImdbTop250Scraper:
 
     @staticmethod
     def parse_imdb_page(url, headers):
@@ -59,7 +60,7 @@ class ImdbPopularMovies:
             logging.error(f"Error saving CSV file '{filename}': {e}")
 
     @staticmethod
-    def scrape_imdb_popular_movies(url, headers):
-        results = ImdbPopularMovies.parse_imdb_page(url, headers)
+    def scrape_imdb_top250(url, headers):
+        results = ImdbScraperTop250Old.parse_imdb_page(url, headers)
         df = pd.DataFrame(results)
         return df
