@@ -35,6 +35,7 @@ class ImdbTop250Scraper:
                     ]
                 )
                 rating = movie_node["ratingsSummary"]["aggregateRating"]
+                rating = rating if rating is not None else ""
                 num_reviews = movie_node["ratingsSummary"]["voteCount"]
 
                 results.append(
