@@ -3,17 +3,15 @@
   <div class="row justify-content-center">
         <div class="col-12 col-lg-11 pe-lg-0 ps-lg-5">
           <img src="{{url_for('static', filename='imdb-logo.webp')}}"
-              class="rounded mx-auto mt-1 pb-3 d-block img-fluid"
-              alt="IMDB TOP 250 MOVIES"
-              style="width:auto;height:90px;">
+               id="logo-img"
+               class="rounded mx-auto mt-1 pb-3 d-block img-fluid"
+               alt="IMDB TOP 250 MOVIES"
+               style="width:auto;height:90px;">
           <h4 class="card-title text-center">IMDB TOP 250 MOVIES</h4>
         </div>
-    <div class="col-12 col-lg-1 align-self-start text-center text-lg-end">
-        <button class="btn btn-primary text-wrap" onClick="window.location.href='/'">Back</button>
-    </div>
   </div>
   <hr class="my-4"/>
-  <table id="scraped-table" class="display compact cell-border responsive text-dark fw-bold" style="width: 100%">
+  <table id="scraped-table" class="display compact cell-border text-dark fw-bold" style="width: 100%">
     <thead>
       <tr>
         <th>rank</th>
@@ -27,25 +25,74 @@
     <tbody>
       {% for row in row_data %}
         <tr>
-          <td>{{row[0]}}</td>
+          <td class="text-center">{{row[0]}}</td>
           <td>{{ row[1] | safe }}</td>
-          <td>{{row[2]}}</td>
+          <td class="text-center">{{row[2]}}</td>
           <td>{{row[3]}}</td>
-          <td>{{row[4]}}</td>
-          <td>{{row[5]}}</td>
+          <td class="text-center">{{row[4]}}</td>
+          <td class="text-center">{{row[5]}}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
   <hr class="my-4"/>
-  <div class="gap-2 col-12 mx-auto text-center">
-    <button class="btn btn-primary text-wrap" onClick="window.location.href='/download_imdb_top250'">Download</button>
-  </div>
   
   <script>
     $(document).ready(function () {
-    $('#scraped-table').DataTable();
-});
+      var currentDate = new Date().toLocaleDateString();
+      var img = document.getElementById('logo-img');
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var imgData = canvas.toDataURL('image/png');
+        $('#scraped-table').DataTable( {
+          responsive: true,
+          layout: {
+            topStart: {
+              buttons: [
+                {
+                  extend: 'copy',
+                  text: '<i class="bi bi-clipboard-check"></i>',
+                  titleAttr: 'Copy'
+                },
+                {
+                  extend: 'csv',
+                  text: '<i class="bi bi-filetype-csv"></i>',
+                  titleAttr: 'CSV',
+                  title: 'IMDB Top 250 Movies ' + currentDate
+                },
+                {
+                  extend: 'excel',
+                  text: '<i class="bi bi-filetype-xlsx"></i>',
+                  titleAttr: 'Excel',
+                  title: 'IMDB Top 250 Movies ' + currentDate
+                },
+                {
+                  extend: 'pdf',
+                  customize: function (doc) {
+                        doc.content.unshift({
+                                alignment: 'center',
+                                image: imgData,
+                                height: 90,
+                                width: 150
+                            });
+                    },
+                  text: '<i class="bi bi-filetype-pdf"></i>',
+                  titleAttr: 'PDF',
+                  title: 'IMDB Top 250 Movies ' + currentDate
+                },
+                {
+                  text: '<i class="bi bi-house-door"></i>',
+                  titleAttr: 'Back',
+                  action: function() {
+                    window.location.href = '/';
+                  }
+                }
+                ]
+              }
+            }
+          });
+    });
   </script>
 {% endblock %}
 
