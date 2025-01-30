@@ -14,22 +14,25 @@ class NetflixTop10PL:
         try:
             source = requests.get(netflix_url, headers=headers)
             soup = BeautifulSoup(source.text, "lxml")
-            movies = soup.find_all("tr", attrs={"data-id": True})
-            dates = soup.find("div", class_="px-3").get_text(strip=True)
+            movies = [tr for tr in soup.find_all("tr") if tr.find("td", class_="title")]
+
             self.results = []
 
             for movie in movies:
-                rank = movie.find("td", class_="tbl-cell-rank").get_text(strip=True)
-                title = movie.find("td", class_="tbl-cell-name").get_text(strip=True)
-                weeks = movie.find("div", class_="w-10").span.get_text(strip=True)
-                data_id = movie["data-id"]
-                url = f"https://www.netflix.com/title/{data_id}"
-                name = f'<a href="{url}" target="_blank">{title}</a>'
+                rank_tag = movie.find("span", class_="rank")
+                rank = int(rank_tag.get_text(strip=True)) if rank_tag else "N/A"
+                title_cell = movie.find("td", class_="title")
+                title_button = title_cell.find("button") if title_cell else None
+                title = (
+                    title_button.get_text(strip=True) if title_button else "Brak tytułu"
+                )
+                weeks_tag = movie.find("td", {"data-uia": "top10-table-row-weeks"})
+                weeks = weeks_tag.get_text(strip=True) if weeks_tag else "N/A"
 
                 self.results.append(
                     {
                         "rank": rank,
-                        "movie": name,
+                        "movie": title,
                         "year": "N/A",
                         "genre": "N/A",
                         "weeks in top10": weeks,
@@ -37,7 +40,6 @@ class NetflixTop10PL:
                 )
 
             self.df = pd.DataFrame(self.results)
-            self.dates = dates
 
         except Exception as e:
             print(f"Error parsing Netflix page: {e}")
